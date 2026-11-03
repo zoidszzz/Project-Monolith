@@ -1,0 +1,28 @@
+PROJECT MONOLITH - ELECTRICAL LAYOUT GUIDE
+==========================================
+
+1. DEALER HUB (Raspberry Pi Pico W)
+-----------------------------------
+- VBUS / VSYS Pin  --> Connected to boosted +5V Power Rail
+- GND Pins         --> Tied to Common Ground System Rail
+- GPIO 0 (UART TX) --> Barcode Scanner Module RX Pin
+- GPIO 1 (UART RX) --> Barcode Scanner Module TX Pin
+- GPIO 14 (PWM Out)--> MX1508 Motor Driver IN1 (Feeder Roller)
+- GPIO 15 (PWM Out)--> MX1508 Motor Driver IN2 (Dealing Flywheel)
+- GPIO 16 (Digital)--> Base pin of S8050 NPN Transistor (Solenoid Gate)
+- GPIO 2, 3, 4, 5  --> ULN2003 Stepper Driver board inputs (360 Rotation Base)
+
+2. SMART MAT ARRAY (ESP32-S3)
+-----------------------------
+- Vin / 5V Pin     --> Connected to External 5V Power Supply (3A Minimum)
+- GND Pin          --> Tied to Common Ground System Rail
+- GPIO 4, 5, 6, 7  --> Routed through 100-ohm resistors to Gates of MOSFETs 1-4
+- SPI Pins (11-14) --> Integrated RFID Coil Matrix substrate inputs
+
+3. MOSFET INDUCTIVE LOAD ZONE MAP (Per-Zone Setup)
+--------------------------------------------------
+- MOSFET Model: IRL540 N-Channel Logic-Level MOSFET
+- Gate Connection: 100-ohm resistor inline from ESP32 GPIO. 10k-ohm resistor tied from Gate to GND (Static Drain).
+- Drain Connection: Tied to the Negative (-) wire of the 5V Electromagnet.
+- Source Connection: Tied directly to the Common Ground System Rail.
+- Flyback Safety: Wire a 1N4007 Diode directly parallel across the Electromagnet leads (Cathode/Silver line to 5V VCC).
