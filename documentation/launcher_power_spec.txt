@@ -1,0 +1,62 @@
+======================================================================================
+PROJECT MONOLITH: LAUNCHER POWER MANAGEMENT & CARTRIDGE SPECIFICATION (v2.0)
+======================================================================================
+
+[ USB-C CHARGING PORT ] (On Launcher Housing Frame)
+           |
+           v
++----------------------+
+
+|  TP4056 CHARGING IC  |
++----------+-----------+
+           |
+           | (4.2V Regulated Charge Output)
+           v
++------------------------------------------------------------------------------------+
+| 3-PIN MECHANICAL CARTRIDGE CONNECTOR INTERFACE TERMINALS
+|
+|  [Pin 1: BAT+] <========> (Removable Cartridge High-Drain LiPo Power Line)
+|  [Pin 2: GND ] <========> (Removable Cartridge System Common Reference Ground)
+|  [Pin 3: NTC ] <========> (Internal Thermal Safety Sensor Resistor Loop)
++----------------+-----------------+
+                 |
+                 | (Raw Battery Power Envelope: 3.7V - 4.2V Nominal)
+                 v
++----------------------+
+
+|  DW01A PROTECTION IC | <--- Automatic Low-Voltage Cut-off Circuit Disconnects 
++----------+-----------+      the system loop instantly if cell drops below 2.4V.
+           |
+           v
++----------------------+
+
+|  MT3608 BOOST DC-DC  | <--- Steps up fluctuating cell voltage to a rock-solid,
++----------+-----------+      high-amp 5V rail to sustain mechanical flywheel loads.
+           |
+           +=======================> OUTPUT PIN ROUTING TARGETS:
+                                      - Pi Pico W Controller (VBUS Pin)
+                                      - MX1508 Dual DC Flywheel Motor Driver (VCC)
+                                      - ULN2003 Azimuth Base Stepper Board (VCC)
+
+--------------------------------------------------------------------------------------
+MECHANICAL COMPARTMENT CONSTRAINTS
+--------------------------------------------------------------------------------------
+* Shell Mechanism: 3D-printed/molded external protective cartridge casing.
+* Interface Terminals: Gold-plated spring-loaded receiver contacts inside launcher 
+  bay matching flat exposed copper traces on the battery cartridge nose.
+* Retention: Spring-loaded mechanical thumb-latch locking wedge.
+
+--------------------------------------------------------------------------------------
+SYSTEM TETHERED INTERCONNECT SPECIFICATION (CROSS-TABLE POWER POOL)
+--------------------------------------------------------------------------------------
+* Interface Port: 2-Pin Magnetic Breakaway or Dedicated Auxiliary USB-C Interface
+* Interconnect Bus Topology: Direct Parallel 5V VCC / System Ground Bridging Link
+* Pin 1: Shared 5V VCC Rail (Tethers Cap Dock Boost Output directly to Launcher Bus)
+* Pin 2: System Common Ground (Establishes static electrical zero-reference baseline)
+
+Operational Behavior:
+When the physical cross-table tether cable is engaged, Unit 1 (Launcher) and Unit 2 
+(Smart Mat Cap) merge into a single 13,000 mAh power network. Independent voltage 
+monitoring loops automatically balance the total system drain, enabling up to 37.4 
+hours of unified, continuous portable dueling runtime.
+======================================================================================
